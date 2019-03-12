@@ -23,7 +23,6 @@ UI:
 	* Click -(Website & Register Link <Hyperlink>)> WebsiteActivity
 	* Enter once to return to the MainActivity page
 - WebsiteActivity(?): Browse website (Internal or External?)
-<<<<<<< HEAD
 	o Do what web can do
 
 Progress:
@@ -33,6 +32,4 @@ March 11, 2019 <Data - Http Request>
 * Tried Http Request Library: Unirest
 * Tried Java Json Library: Gson
 * Http Request: currently doesn't work 
-=======
-	* Do what web can do
->>>>>>> 58df4901d941213322e7536c67914ea29d254bc5
+
