@@ -7,7 +7,7 @@ Main functions:
 -Request from UW-API for Info Session information. Display on an Android App.
  
 Application Structure:
-![Application Outline](/display/Blueprint.png)
+![Blueprint](/display/Blueprint.png)
 
 Data:
 - HTTP Request Java (Request every time User open the app ¨C check network and request)
