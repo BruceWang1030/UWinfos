@@ -15,12 +15,12 @@ Data:
 
 UI:
 - MainActivity: Info Session Blocks (Sorted by Time: now -> future)
-	o Scroll down
-	o Click -(Info Block)> DetailActivity
-	o Enter twice to exit
+	* Scroll down
+	* Click -(Info Block)> DetailActivity
+	* Enter twice to exit
 - DetailActivity: Info Session Details 
-	o Scroll down
-	o Click -(Website & Register Link <Hyperlink>)> WebsiteActivity
-	o Enter once to return to the MainActivity page
+	* Scroll down
+	* Click -(Website & Register Link <Hyperlink>)> WebsiteActivity
+	* Enter once to return to the MainActivity page
 - WebsiteActivity(?): Browse website (Internal or External?)
-	o Do what web can do
+	* Do what web can do
