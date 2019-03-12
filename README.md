@@ -24,3 +24,11 @@ UI:
 	o Enter once to return to the MainActivity page
 - WebsiteActivity(?): Browse website (Internal or External?)
 	o Do what web can do
+
+Progress:
+
+March 11, 2019 <Data - Http Request>
+* Set up blueprint
+* Tried Http Request Library: Unirest
+* Tried Java Json Library: Gson
+* Http Request: currently doesn't work 
