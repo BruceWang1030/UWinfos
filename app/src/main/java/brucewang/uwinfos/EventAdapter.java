@@ -7,13 +7,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import brucewang.uwinfos.models.Event;
+
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
-    String[] events = new String[10];
+    List<Event> mEventsData;
 
     public EventAdapter() {
-        for (int i = 0; i < 10; i++) {
-            events[i] = "e" + i;
-        }
+
+    }
+
+    public void setEventsData(List<Event> events) {
+        mEventsData = events;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -26,12 +34,16 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder eventViewHolder, int i) {
-        eventViewHolder.mSessionNameTextView.setText(events[i]);
+        Event event = mEventsData.get(i);
+        eventViewHolder.mSessionNameTextView.setText(event.getTitle());
+        eventViewHolder.mDateTextView.setText(event.getTimes().get(0).getStart());
+        eventViewHolder.mLocationTextView.setText(event.getSite_name());
     }
 
     @Override
     public int getItemCount() {
-        return events.length;
+        if (mEventsData == null) return 0;
+        return mEventsData.size();
     }
 
     public class EventViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -41,9 +53,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
         public EventViewHolder (View view) {
             super(view);
-            mSessionNameTextView = (TextView) view.findViewById(R.id.tv_session_name);
-            mDateTextView = (TextView) view.findViewById(R.id.tv_date);
-            mLocationTextView = (TextView) view.findViewById(R.id.tv_location);
+            mSessionNameTextView = view.findViewById(R.id.tv_session_name);
+            mDateTextView = view.findViewById(R.id.tv_date);
+            mLocationTextView = view.findViewById(R.id.tv_location);
             view.setOnClickListener(this);
         }
 
