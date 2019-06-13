@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private RecyclerView mEventListRecyclerView;
     private ProgressBar mProgressBar;
+    private SwipeRefreshLayout mRefreshLayout;
     private FloatingActionButton mGoToTopButton;
     private ImageView mNoConnection;
 
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mProgressBar = findViewById(R.id.pb_loading);
 
         mNoConnection = findViewById(R.id.iv_no_connection);
+
         mGoToTopButton = findViewById(R.id.fab_go_to_top);
         mGoToTopButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,13 +61,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mEventListRecyclerView.setLayoutManager(layoutManager);
 
         mEventListRecyclerView.setHasFixedSize(true);
+
         mEventListRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @SuppressLint("RestrictedApi")
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                //if the user stops scrolling
                 if (newState == SCROLL_STATE_IDLE) {
+                    //and can scroll up
                     if (mEventListRecyclerView.canScrollVertically(-1)) {
-                        //TODO: show a button for return to top
+                        //show a button for return to top
                         mGoToTopButton.setVisibility(View.VISIBLE);
                     } else {
                         mGoToTopButton.setVisibility(View.GONE);
@@ -83,7 +89,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         } else {
             getSupportLoaderManager().initLoader(LOADER_ID, null, this);
         }
+
+        mRefreshLayout = findViewById(R.id.srl_refresh);
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                invalidateData();
+                getSupportLoaderManager().restartLoader(LOADER_ID, null, MainActivity.this);
+            }
+        });
+
         //TODO: use database?
+        //TODO: implement filtering?
     }
 
 
@@ -95,7 +112,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
             @Override
             protected void onStartLoading() {
-                showProgressBar();
+                if (mRefreshLayout != null && !mRefreshLayout.isRefreshing()) {
+                    showProgressBar();
+                }
                 if (mData != null) {
                     deliverResult(mData);
                 } else {
@@ -121,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoadFinished(@NonNull Loader<List<Event>> loader, List<Event> events) {
         mAdapter.setEventsData(events);
         showRecyclerView();
+        mRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -150,5 +170,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         ConnectivityManager manager = (ConnectivityManager)getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo info = manager.getActiveNetworkInfo();
         return info != null && info.isConnected();
+    }
+
+    private void invalidateData() {
+        mAdapter.setEventsData(null);
     }
 }
