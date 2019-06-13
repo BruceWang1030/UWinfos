@@ -1,31 +1,34 @@
 package brucewang.uwinfos;
 
+import android.annotation.SuppressLint;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.ScrollView;
 
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
 import java.util.List;
 
 import brucewang.uwinfos.models.Event;
 import brucewang.uwinfos.utilities.NetworkUtils;
 
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
+
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Event>> {
 
     private RecyclerView mEventListRecyclerView;
     private ProgressBar mProgressBar;
+    private FloatingActionButton mGoToTopButton;
 
     private EventAdapter mAdapter;
 
@@ -38,17 +41,41 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         mEventListRecyclerView = findViewById(R.id.rv_event_list);
         mProgressBar = findViewById(R.id.pb_loading);
+        mGoToTopButton = findViewById(R.id.fab_go_to_top);
+        mGoToTopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mEventListRecyclerView.smoothScrollToPosition(0);
+            }
+        });
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(
                 this, LinearLayoutManager.VERTICAL, false);
         mEventListRecyclerView.setLayoutManager(layoutManager);
 
         mEventListRecyclerView.setHasFixedSize(true);
+        mEventListRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @SuppressLint("RestrictedApi")
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                if (newState == SCROLL_STATE_IDLE) {
+                    if (mEventListRecyclerView.canScrollVertically(-1)) {
+                        //TODO: show a button for return to top
+                        mGoToTopButton.setVisibility(View.VISIBLE);
+                    } else {
+                        mGoToTopButton.setVisibility(View.GONE);
+                    }
+                } else {
+                    mGoToTopButton.setVisibility(View.GONE);
+                }
+            }
+        });
 
-        mAdapter = new EventAdapter();
+                mAdapter = new EventAdapter();
         mEventListRecyclerView.setAdapter(mAdapter);
 
         getSupportLoaderManager().initLoader(LOADER_ID,null,this);
+        //TODO: use database?
     }
 
 

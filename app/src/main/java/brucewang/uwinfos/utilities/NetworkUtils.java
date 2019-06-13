@@ -40,6 +40,8 @@ public class NetworkUtils {
         return response.getData();
     }
 
+    //TODO: implement method that get event detail from api
+
     private static String getResponseFromURL(URL url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {

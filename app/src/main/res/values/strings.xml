@@ -3,4 +3,11 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+
+    <!-- menu items -->
+    <string name="next_week">Next Week</string>
+    <string name="next_two_weeks">Next 2 Weeks</string>
+    <string name="customize">Customize</string>
+    <string name="all">All</string>
+
 </resources>
