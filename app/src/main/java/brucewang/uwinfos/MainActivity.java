@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private RecyclerView mEventListRecyclerView;
     private ProgressBar mProgressBar;
     private FloatingActionButton mGoToTopButton;
+    private ImageView mNoConnection;
 
     private EventAdapter mAdapter;
 
@@ -39,8 +41,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mEventListRecyclerView = findViewById(R.id.rv_event_list);
         mProgressBar = findViewById(R.id.pb_loading);
+
+        mNoConnection = findViewById(R.id.iv_no_connection);
         mGoToTopButton = findViewById(R.id.fab_go_to_top);
         mGoToTopButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
 
+        mEventListRecyclerView = findViewById(R.id.rv_event_list);
         LinearLayoutManager layoutManager = new LinearLayoutManager(
                 this, LinearLayoutManager.VERTICAL, false);
         mEventListRecyclerView.setLayoutManager(layoutManager);
@@ -71,10 +75,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
 
-                mAdapter = new EventAdapter();
+        mAdapter = new EventAdapter();
         mEventListRecyclerView.setAdapter(mAdapter);
 
-        getSupportLoaderManager().initLoader(LOADER_ID,null,this);
+        if (!isConnected()) {
+            showNoConnection();
+        } else {
+            getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+        }
         //TODO: use database?
     }
 
@@ -123,11 +131,24 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private void showRecyclerView() {
         mProgressBar.setVisibility(View.INVISIBLE);
         mEventListRecyclerView.setVisibility(View.VISIBLE);
+        mNoConnection.setVisibility(View.INVISIBLE);
     }
 
     private void showProgressBar() {
         mProgressBar.setVisibility(View.VISIBLE);
         mEventListRecyclerView.setVisibility(View.INVISIBLE);
+        mNoConnection.setVisibility(View.INVISIBLE);
     }
 
+    private void showNoConnection() {
+        mProgressBar.setVisibility(View.INVISIBLE);
+        mEventListRecyclerView.setVisibility(View.INVISIBLE);
+        mNoConnection.setVisibility(View.VISIBLE);
+    }
+
+    private boolean isConnected() {
+        ConnectivityManager manager = (ConnectivityManager)getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo info = manager.getActiveNetworkInfo();
+        return info != null && info.isConnected();
+    }
 }
