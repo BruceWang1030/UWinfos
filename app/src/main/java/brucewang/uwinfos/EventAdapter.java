@@ -14,9 +14,10 @@ import brucewang.uwinfos.models.Event;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
     List<Event> mEventsData;
+    EventClickHandler mHandler;
 
-    public EventAdapter() {
-
+    public EventAdapter(EventClickHandler handler) {
+        mHandler = handler;
     }
 
     public void setEventsData(List<Event> events) {
@@ -38,6 +39,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         eventViewHolder.mSessionNameTextView.setText(event.getTitle());
         eventViewHolder.mDateTextView.setText(event.getTimes().get(0).getStart());
         eventViewHolder.mLocationTextView.setText(event.getSite_name());
+        eventViewHolder.mEvent = event;
     }
 
     @Override
@@ -50,8 +52,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         public final TextView mSessionNameTextView;
         public final TextView mDateTextView;
         public final TextView mLocationTextView;
+        public Event mEvent = null;
 
-        public EventViewHolder (View view) {
+        public EventViewHolder(View view) {
             super(view);
             mSessionNameTextView = view.findViewById(R.id.tv_session_name);
             mDateTextView = view.findViewById(R.id.tv_date);
@@ -61,8 +64,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
         @Override
         public void onClick(View v) {
-
+            mHandler.handleClick(mEvent);
         }
+    }
+
+    public interface EventClickHandler{
+        void handleClick(Event event);
     }
 
 }

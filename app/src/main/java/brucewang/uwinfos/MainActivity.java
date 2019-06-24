@@ -1,6 +1,7 @@
 package brucewang.uwinfos;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -26,7 +27,7 @@ import brucewang.uwinfos.utilities.NetworkUtils;
 
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Event>> {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Event>>, EventAdapter.EventClickHandler {
 
     private RecyclerView mEventListRecyclerView;
     private ProgressBar mProgressBar;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private EventAdapter mAdapter;
 
     private static final int LOADER_ID = 22;
+    public static final String TAG = "EventInfo";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
 
-        mAdapter = new EventAdapter();
+        mAdapter = new EventAdapter(this);
         mEventListRecyclerView.setAdapter(mAdapter);
 
         if (!isConnected()) {
@@ -174,5 +176,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private void invalidateData() {
         mAdapter.setEventsData(null);
+    }
+
+    @Override
+    public void handleClick(Event event) {
+        Intent intent = new Intent(this,DetailActivity.class);
+        String[] value = new String[2];
+        value[0] = String.valueOf(event.getId());
+        value[1] = event.getSite();
+        intent.putExtra(TAG,value);
+        startActivity(intent);
     }
 }

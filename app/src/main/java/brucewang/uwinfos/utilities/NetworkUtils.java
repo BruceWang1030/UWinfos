@@ -13,12 +13,14 @@ import java.util.List;
 import java.util.Scanner;
 
 import brucewang.uwinfos.models.Event;
+import brucewang.uwinfos.models.EventDetail;
+import brucewang.uwinfos.models.EventDetailResponse;
 import brucewang.uwinfos.models.EventsResponse;
 
 public class NetworkUtils {
     private static final String API = "https://api.uwaterloo.ca/v2";
     private static final String EVENTS_ENTPOINT = "/events";
-    private static final String EVENT_DETAIL_ENTPOINT = "/event/%s/%s";
+    private static final String EVENT_DETAIL_ENTPOINT = "/events/%s/%s";
     private static final String format = ".json?";
     private static final String KEY = "key=df31511c2940dc6a0c9aa187c87bb0da";
 
@@ -41,6 +43,22 @@ public class NetworkUtils {
     }
 
     //TODO: implement method that get event detail from api
+
+    public static EventDetail getEventDetail(String site, String id) {
+        Gson gson = new Gson();
+        String json = "";
+        try {
+            String urlString = String.format(EVENTS_DETAIL_URL, site, id);
+            URL url = new URL(urlString);
+            json = getResponseFromURL(url);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        EventDetailResponse response = gson.fromJson(json,EventDetailResponse.class);
+        return response.getData();
+    }
 
     private static String getResponseFromURL(URL url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
