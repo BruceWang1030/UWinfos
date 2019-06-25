@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:title="@string/all"
+        app:showAsAction="never"
+        android:id="@+id/all" />
+
+    <item android:title="@string/next_week"
+        app:showAsAction="never"
+        android:id="@+id/next_week" />
+
+    <item android:id="@+id/next_two_week"
+        android:title="@string/next_two_weeks"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/customize"
+        android:title="@string/customize"
+        app:showAsAction="never" />
+
+</menu>
